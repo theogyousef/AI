@@ -1,0 +1,38 @@
+tqdm
+pandas
+matplotlib
+seaborn
+numpy
+scikit-learn
+xgboost
+nltk
+dask
+
+# This file lists all the necessary Python packages for the project
+
+# Progress bar utility
+tqdm
+
+# Data manipulation and analysis
+pandas
+
+# Plotting and visualization
+matplotlib
+seaborn
+
+# Scientific computing and array handling
+numpy
+
+# Machine learning algorithms and tools
+scikit-learn
+
+# Gradient boosting framework
+xgboost
+
+# Natural Language Toolkit for text processing and analysis
+nltk
+
+# Parallel computing library
+dask
+
+# The 'os' module is part of Python's standard library, so it does not need to be installed via pip.
