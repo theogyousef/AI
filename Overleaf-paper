@@ -1,0 +1,506 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage[numbers]{natbib}
+\usepackage{algorithm,algpseudocode}
+\usepackage{amsmath}
+\newcommand*{\vv}[1]{\vec{\mkern0mu#1}}
+\usepackage{algorithmicx}
+\usepackage{verbatim}
+\usepackage{adjustbox}
+\usepackage{blindtext}
+\usepackage{algpseudocode}
+\usepackage{lineno,hyperref}
+\usepackage{graphicx, color} 
+\usepackage{epstopdf} 
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{blindtext}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{todonotes}
+\usepackage{array}
+\usepackage{float}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\newcolumntype{H}{>{\iffalse}c<{\fi}@{}}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\DeclareUnicodeCharacter{00A0}{ }
+\DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{0301}{\'{e}}
+\DeclareUnicodeCharacter{2212}{-}
+
+\usepackage[utf8]{inputenc}
+\renewcommand{\algorithmicrequire}{\textbf{INPUT:}}
+\renewcommand{\algorithmicensure}{\textbf{OUTPUT:}}
+
+\newcommand{\cellbluelight}{{\cellcolor{blue!15}}}
+\newcommand{\cellblue}{{\cellcolor{blue!30}}}
+\newcommand\algName{BWEAD}
+\newcommand\algNameLong{Balanced weight algorithm with diversity}
+
+\newcommand{\mar}[1]{\textcolor{blue}{#1}}
+\newcommand{\erick}[1]{\textcolor{red}{#1}}
+\newcommand{\daol}[1]{\textcolor{green}{#1}}
+
+\setlength {\marginparwidth }{2cm} 
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+\setlength{\marginparwidth}{2cm}
+\title{Advanced Malware Classification Using Hierarchical Machine Learning Models}
+
+\author{\IEEEauthorblockN{Diaa Salama AbdElminaam$^{1}$,  Tarek Mohamed$^{2}$,\\
+Mariam Samy Aly$^{3}$, Youssef Ehab Abdelmageed $^{4}$}
+
+\IEEEauthorblockA{\textit{Faculty of Computer Science} \\
+\textit{Misr International University, Cairo, Egypt} \\
+diaa.salama$^{1}$, tarek.talaat$^{2}$,\\ mariam2010385$^{3}$, Youssef2101042$^{4}$, moaz2106062$^{5}$, mohamed2106522   $^{6}$\{@miuegypt.edu.eg\}}}
+
+
+\maketitle
+
+\begin{abstract}
+In the rapidly evolving domain of cybersecurity, accurately classifying malware is a paramount concern. This study leverages cutting-edge machine learning techniques to address this challenge, utilizing algorithms such as K-Nearest Neighbors (KNN) ,Random Forest, Logistic Regression and XGBoost. These methods were applied to classify malware types using the Microsoft Malware Classification Challenge (BIG 2015) dataset, which includes a wide variety of malware samples. The challenge highlights the continuous need for innovative solutions to effectively group malware into their respective families. Our experimental results demonstrate that Random Forest and XGBoost outperform other models, achieving accuracies as high as 0.98, thus proving to be highly effective in handling complex classification scenarios. Logistic Regression provided substantial interpretability with an accuracy of 0.95, suitable for applications requiring detailed insight into model decisions.This paper not only details our findings but also discusses the implications of these results for future malware detection systems and the potential for these algorithms to be integrated into real-world applications.
+
+\textbf{Keywords: Malware Classification; Random Forest; XGBoost; Logistic Regression; KNN.}
+\end{abstract}
+
+% intro
+%\input{sect1} %
+\mar{\section{\textbf{\large Introduction }}} 
+\label{sec:intro}
+"Malware," a shorthand for "malicious software," describes a group of software programs designed specifically to interfere with, damage, or gain unauthorized utilization of computer systems. Binary files, assembly files, or even both \textcolor{blue}{\citep{narayanan2020ensemble}} may be used to carry malware programs. It comes in many forms, including trojan horses, worms, viruses, ransomware, and spyware, all of which are designed to take advantage of distinct weaknesses. Malware affects people and organizations in many ways because it can rob data integrity, seize control of system resources, and cause serious disruptions to operations and revenue.Cybersecurity experts face constant problems as a result of the growing sophistication and frequency of malware attacks brought about by the interconnectedness of devices and the growth of digital networks.Sorting malware kinds accurately and quickly is crucial to limiting potential threats and implementing targeted protection measures.
+\newline
+
+In cybersecurity, malware categorization is essential because it helps practitioners recognise and comprehend the dangers they encounter. Security teams may better understand the unique behaviours and effects of malware by classifying it into separate categories,This is crucial information for developing measures that will work. This technique facilitates the development of preventative technologies and approaches in addition to helping respond to threats more quickly,Furthermore, malware classification facilitates threat intelligence exchange among cybersecurity communities, enhancing their combined capacity to counter and eliminate emerging and novel cyber threats,As digital landscapes grow more complex, the need for quick and accurate malware classification is essential to strengthen security in a constantly changing threat environment.
+\newline
+
+Machine learning is a dynamic branch of artificial intelligence that focuses on developing systems capable of learning and deriving insights from their experiences. This field is particularly effective in identifying complex patterns in vast datasets, such as those used for malware classification. By training machine learning algorithms on a dataset that includes various types of malware, the models learn to predict the category of new, unseen malware instances. The process begins by preprocessing the data, handling any missing values, and then partitioning it into training and test sets. The model is constructed using the training data, which helps it identify patterns and categorize different kinds of malware. The correctness of the model is then evaluated in real-world circumstances using the test dataset.The ultimate goal is to create robust models that can effectively predict and classify new malware samples, enhancing cybersecurity measures.
+\newline
+
+In our investigation, we explore the challenging task of malware classification by the application of machine learning techniques. The escalating sophistication and variety of malware necessitate advanced solutions for accurate and timely identification, crucial for ensuring cybersecurity. We explore a range of machine learning algorithms, specifically K-Nearest Neighbors (KNN),Random Forest, XGBoost , and much more.Each of these algorithms are chosen for its potential to effectively distinguish between different types of malware based on their signatures and behaviors.
+\newline
+
+This paper is structured as follows: Section Two explores into related work, providing an appropriate research related to malware classification. Section Three details the proposed methodology of our research, which includes a description of the dataset and the machine learning algorithms utilized. The results of the implemented algorithms are presented in Section Four, accompanied by a thorough analysis of their performance. Section Five offers the conclusion, summarizing the key findings and implications of the study. Finally, Section Six acknowledges the contributions of all individuals and entities that supported this research.
+
+ \mar{\section{\textbf{\large Related Work}}}
+\label{Related}
+The field of malware categorization has seen a lot of research, and during the course of our examination, we have read several important articles that have impacted our methodology. These works include a variety of machine learning and deep learning techniques for effective malware classification. We will list all the articles that have impacted our work in the references section of our paper.
+\newline
+
+"Microsoft Malware Classification Challenge Dataset:\textcolor{blue}{\citep{ronen2018microsoft}} The  A Benchmark for Malware Behavior Modeling" authored by the team behind the challenge dataset aims to provide a comprehensive description of the dataset's characteristics and establish it as a standard benchmark for research in malware behavior modeling. With over 50 research papers citing the dataset, the paper highlights its widespread recognition in the cybersecurity research community and emphasizes the importance of understanding the existing contributions and potential research directions in malware behavior modeling. The dataset's significance lies in its role as a valuable resource for researchers, showcasing its relevance and utility in advancing cybersecurity research.
+\newline
+
+
+The paper "Malware Classification with Deep Convolutional Neural Networks" \textcolor{blue}{\citep{kalash2018malware}}by the authors proposesan architecture for deep learning that uses convolutional neural networks (CNN) to classify malware. The study aims to provide a general and strong framework that can effectively classify malware samples according to their family, even if they are variations of already-existing malware. The authors highlight the increasing volume of malware over the past decade and emphasize the need for techniques tolerant of malware variants. By utilizing a CNN-based approach, the study aims to overcome the limitations of shallow learning techniques and manual feature engineering commonly used in malware classification. The experiments conducted on challenging datasets, such as Malimg and Microsoft, demonstrate superior performance compared to existing methods, achieving high accuracy rates.
+\newline
+
+The empirical study on Microsoft malware classification\textcolor{blue}{\citep{chivukula2021empirical}} conducted by Chivukula et al. focuses on the application of various multi-class classification algorithms to predict the class of malware files. The research problem involves determining the class of a given malware file out of nine possible classes. The study utilizes machine learning algorithms such as logistic regression, random forest, and XGBoost to analyze a dataset provided by Microsoft. The experimental setup includes parameter tuning for optimal performance of the classifiers. The findings of the study aim to enhance malware detection and contribute to cybersecurity efforts in safeguarding computer systems against evolving cyber threats.
+\newline
+
+Jaymin Patel et al.\textcolor{blue}{\citep{cakir2018malware}} Bugra Cakir and Erdogan Dogdu authored a paper on Malware Classification Using Deep Learning Methods, which explores the application of deep learning techniques, such as neural networks and word2vec, for improving malware detection and classification. The study highlights the limitations of traditional machine learning algorithms in this context and demonstrates the effectiveness of deep learning models in achieving up to 96\% accuracy with limited sample data. Word2vec is utilized for feature extraction from malware samples, enhancing the representation of malicious code, while the Gradient Boosting algorithm is employed for classification tasks. Overall, the research showcases the potential of deep learning approaches in enhancing cybersecurity efforts through more accurate malware detection.
+\newline
+
+By using an ensemble classification system that combines recurrent and convolutional neural networks—more specifically, Long Short-Term Memory (LSTM) networks—the authors of "Ensemble Malware Classification System Using Deep Neural Networks,"\textcolor{blue}{\citep{narayanan2020ensemble}} written by Barath Narayanan Narayanan and Venkata Salini Priyamvada Davuluru, hope to improve the accuracy of malware detection. They use the Malware Classification Challenge dataset from Microsoft, which includes nine different malware classes with both compiled and assembly file types. The assembled files, which are made up of machine language opcodes, are sequenced for LSTM processing, while the compiled files are handled as images for CNN analysis. Support vector machines or logistic regression are used for further classification based on features that are taken from these neural networks. With an overall accuracy of 99.8\%, this method effectively establishes a new benchmark, demonstrating the system's potential,for customizable, high-performance malware categorization that can be adjusted to different computer resources.
+\newline
+
+"Intelligent Vision-Based Malware Detection and Classification Using Deep Random Forest Paradigm"\textcolor{blue}{\citep{roseline2020intelligent}} by S. Abijah Roseline, S. Geetha, Seifedine Kadry, and Yunyoung Nam, the authors aim to address the challenges in detecting and classifying new and advanced malware variants, which often include sophisticated features like code obfuscations. They provide a solid machine learning-based solution that uses a visualization technique that turns malware into two-dimensional visuals. This method allows for the extraction of distinctive textural features from the images, which are then used to train a classifier. The framework utilizes a layered ensemble approach, leveraging deep learning techniques without requiring hyperparameter tuning or backpropagation, thereby simplifying the model complexity and improving the detection rates on various malware datasets. The results demonstrate significant improvements over traditional malware detection systems, achieving high detection rates across multiple datasets.
+\newline
+
+"Forensic Malware Identification Using Naive Bayes Method".\textcolor{blue}{\citep{ramadhan2020forensic}} by Beno Ramadhan, Yudha Purwanto, and Muhammad Faris Ruriawan from Telkom University, the authors address the challenge of accurately identifying malware using static and dynamic analysis techniques. They propose a forensic malware detection system that utilizes the Naive Bayes machine learning method to classify software as malware or benign based on extracted characteristics. Their system processes data obtained through both static and dynamic analysis, where static analysis involves examining the structure of software without executing it, and dynamic analysis observes software behavior during execution. The results demonstrate that their Naive Bayes classifier achieves an accuracy of 93\% with static characteristics and 85\% with dynamic characteristics, indicating the efficacy of their approach in malware identification.
+\newline
+
+"Malware Category Prediction using KNN and SVM Classifiers".\textcolor{blue}{\citep{udayakumar2019malware}} by Udayakumar N, Subbulakshmi.T, Ayush Mishra, Shivang Mishra, and Puneet Jain from Vellore Institute of Technology, the goal is to enhance early-stage malware detection to preempt potential damage. The study employs machine learning algorithms, specifically Logistic Regression, K-Nearest Neighbors (KNN), and Support Vector Machines (SVM), to classify malware efficiently. The research highlighted the effectiveness of these algorithms in predicting malware categories, where feature selection was notably utilized to boost prediction accuracy significantly, achieving up to 99\% accuracy with SVM using a polynomial kernel. The paper underlines the importance of early detection in cybersecurity and showcases the potential of machine learning technologies in achieving this objective.
+\newline
+
+"Performance Analysis of Machine Learning and Pattern Recognition Algorithms for Malware Classification"\textcolor{blue}{\citep{narayanan2016performance}} by Barath Narayanan Narayanan, Ouboti Djaneye-Boundjou, and Temesguen M. Kebede at the University of Dayton, the authors focus on enhancing malware classification through effective feature extraction and utilizing various classification techniques. They introduce a novel approach of visualizing malware as images, which captures minor changes while retaining global structures, facilitating the use of image classification methods. Principal Component Analysis (PCA) is employed for feature extraction from these images, and the performance of different classifiers, including Artificial Neural Networks (ANN), K-Nearest Neighbors (kNN), and Support Vector Machine (SVM), is evaluated. This approach is tested using the publicly available Kaggle dataset from the Microsoft Malware Classification Challenge (BIG 2015), highlighting the potential for improved classification accuracy in the cybersecurity domain.
+\newline
+
+"A New Malware Classification Framework Based on Deep Learning Algorithms" \textcolor{blue}{\citep{aslan2021new}} by Ömer Aslan and Abdullah Asim Yilmaz, the authors develop a novel hybrid deep learning-based framework for malware classification, which integrates pre-trained deep neural network models to improve classification accuracy. Their approach involves a sequence of stages: data acquisition, design of the neural network architecture, training the model, and evaluation, tested on datasets such as Malimg, Microsoft BIG 2015, and Malevis. The architecture leverages features from convolution layers and employs transfer learning techniques to achieve high accuracy rates, significantly surpassing traditional machine learning methods in malware detection. This study showcases how deep learning can be effectively adapted for cybersecurity applications, specifically in classifying various malware types with enhanced precision and efficiency.
+\newline
+
+"Deep Learning Framework and Visualization for Malware Classification" \textcolor{blue}{\citep{akarsh2019deep}} by Akarsh S, Vijay Krishna Menon, Simran K, Soman K P, and Prabaharan Poornachandran from Amrita Vishwa Vidyapeetham, In order to address the growing problem of malware proliferation, the authors create a deep learning-based malware classification framework. With the use of a hybrid network that combines Long Short-Term Memory (LSTM) networks and a single-dimensional Convolutional Neural Networks (CNNs), the framework attempts to effectively categorize malware into several kinds without requiring conventional disassembly or execution. By utilizing the publicly accessible Malimg dataset as a benchmark, this method achieves a noteworthy improvement in classification accuracy, reaching 94.4\%. By processing malware representations directly, the method circumvents the typical complications of binary analysis, such de-obfuscation, and shows promise for efficient and rapid malware classification.
+\newline
+
+"Malware Classification Framework using Convolutional Neural Network"\textcolor{blue}{\citep{khan2020malware}} by Mamoona Khan, Duaa Baig, Usman Shahid Khan, and Ahmad Karim, the authors focus on improving malware detection and classification using deep neural networks. They explore a novel technique that involves converting malware binary files into images and then classifying them using dense and convolutional neural network models. The study utilizes a dataset provided by Microsoft for the Microsoft Malware Classification Challenge in 2015, and the proposed models are trained on a set of malware samples distributed into nine different families. The dense model and the convolutional model (CNN) are compared, with the CNN showing a higher accuracy of 97.80\%. This approach demonstrates the effectiveness of using image recognition techniques in the classification of malware, providing a robust tool for enhancing cybersecurity measures in IT environments.
+\newline
+
+"Malware Classification using Byte Sequence Information"\textcolor{blue}{\citep{jung2018malware}} by Byungho Jung, Taeguen Kim, and Eul Gyu Im, the authors propose a novel malware classification method leveraging the capabilities of deep learning to analyze malware through byte sequence information rather than traditional API call sequences. This approach utilizes a convolutional neural network (CNN) to process images generated from malware byte information, effectively reflecting the behavioral context of the malware. The framework, designed to address the inadequacies of dynamic analysis due to malware's evasion techniques, demonstrates that when compared to conventional CNN models, the suggested strategy delivers superior accuracy. The document demonstrates through various experiments that their method can significantly enhance malware classification, achieving an impressive detection accuracy of about 99\%.
+\newline
+
+"A Hierarchical Convolutional Neural Network for Malware Classification" \textcolor{blue}{\citep{gibert2019hierarchical}} by Daniel Gibert, Carles Mateu, and Jordi Planes from the University of Lleida, the authors propose a novel neural architecture called the Hierarchical Convolutional Network (HCN) to enhance malware classification. This architecture is designed to capture the hierarchical structure of malware by using two levels of convolutional blocks that extract features at both the mnemonic and function levels of executable files. The HCN method was tested using the dataset from the Microsoft Malware Classification Challenge, where it outperformed nearly all deep learning methods previously reported in the literature. The framework takes advantage of the hierarchical information present in Portable Executable (PE) files, making it capable of understanding both high-level architectural features and detailed mnemonic sequences, which significantly improves the accuracy of malware classification.
+\newline
+
+"Random Forest for Malware Classification"\textcolor{blue}{\citep{DBLP:journals/corr/GarciaM16}} by Felan Carlo C. Garcia and Felix P. Muga II from Ateneo de Manila University, the authors address the critical task of accurately classifying malware variants, which pose significant threats in cybersecurity. Utilizing a unique approach, the study involves converting malware binary data into images and employing the Random Forest algorithm to categorize various malware families. The process, supported by the conversion of these binaries into a grayscale image format, allows for the effective classification using visual patterns that act as distinct malware signatures. The method demonstrated a high accuracy rate of 0.9562, highlighting its potential in enhancing malware detection techniques beyond traditional signature-based methods. This innovative approach not only contributes to the cybersecurity field by improving detection capabilities but also opens the door for future research into visual-based classification systems in malware analysis.
+\newline
+
+The authors of the research\textcolor{blue}{\citep{abusitta2021malware}}, Adel Abusitta, Miles Q. Li, and Benjamin C.M. Fung, concentrate on the difficult and developing topic of malware composition analysis and categorization. Their paper offers a thorough overview of current developments in malware research, emphasizing fresh approaches to comprehending the intricacy and behaviors of malware. The survey explores both AI-driven and non-AI-driven methods for categorizing and contrasting malware according to its functions and behaviors. The goal of the study is to improve the tools that cybersecurity experts and reverse engineers have at their disposal so they can anticipate, comprehend, and lessen possible risks that could arise from different kinds of malware.
+\newline
+
+ \mar{\section{\textbf{\large Proposed Methodology}}}
+\label{methodo}
+The method we are using to solve the Microsoft Malware Detection competition performs the following steps for each model: data preprocessing, feature normalization, dataset solitting , model training and evaluations. This structured approach aims to optimize model performance and improve the accuracy of malware detection.
+
+\begin{figure}[H]
+\includegraphics[width=10cm]{Fig/methodolgy-diagram.jpeg}
+\caption{malware classification process}
+\label{predprocess} 
+\end{figure}    
+
+\mar{\subsection{\textbf{\large Datasets Descriptions}}}
+In this research, we utilize the malware dataset from the 2015 Microsoft Malware Classification Challenge, commonly referred to as BIG 2015, which is publicly available on Kaggle\textcolor{blue}{\citep{kaggle2015malware}}. This dataset is a comprehensive collection of 10,868 malware samples, meticulously categorized into one of nine well-defined malware families. These families, representing a wide range of threats within cybersecurity environments, are each characterized by unique behaviors and potential impacts.A training set and a testing set comprise the two segments of the dataset. \textbf{Table \ref{tab:dataset_description}} details the distribution of these samples across the classified categories, as indicated in the Class ID column. Each sample in the training set is accompanied by an assembly file and a `.bytes` file, delineating the characteristics of the malware. In contrast, the testing set contains 10,873 instances whose labels are not publicly disclosed, presenting a realistic challenge in predicting unseen data.
+\newline
+
+The dataset includes several key files:
+\begin{itemize}
+    \item \textbf{train.7z}: Contains the raw training data. MD5 hash: \texttt{4fedb0899fc2210a6c843889a70952ed}.
+    \item \textbf{trainLabels.csv}: Class labels for the training set.
+    \item \textbf{test.7z}: Raw test data. MD5 hash: \texttt{84b6fbfb9df3c461ed2cbbfa371ffb43}.
+    \item \textbf{sampleSubmission.csv}: Demonstrates the required format for submissions.
+    \item \textbf{dataSample.csv}: Provides a preview of the dataset.
+\end{itemize}
+
+\begin{table}[ht]
+\centering
+\caption{Dataset Description}
+\label{tab:dataset_description}
+\small
+\setlength{\tabcolsep}{4pt} 
+\begin{tabular}{|c|l|c|r|} 
+\hline 
+Class ID & Family Name & Type & Class samples \\ \hline
+1 & Ramnit & Worm & 1541 \\ \hline
+2 & Lollipop & Adware & 2478 \\ \hline
+3 & Kelihos\_ver3 & Backdoor & 2942 \\ \hline
+4 & Vundo & Trojan & 475 \\ \hline
+5 & Simda & Backdoor & 42 \\ \hline
+6 & Tracur & TrojanDownloader & 751 \\ \hline
+7 & Kelihos\_ver1 & Backdoor & 398 \\ \hline
+8 & Obfuscator.ACY & Obfuscated Malware & 1228 \\ \hline
+9 & Gatak & Backdoor & 1013 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Binary and Assembly Files}
+\subsubsection{Binary Files}
+The dataset includes `.bytes` files for each malware sample. These files contain the binary content of the executables, represented in hexadecimal format. The `.bytes` files are crucial for generating raw features such as byte entropy and byte frequency histograms, which are instrumental in our analysis.
+
+\begin{figure}[H]
+\includegraphics[width=9cm]{Fig/binaryVis.jpeg}
+\caption{Malware Binary Visualized as an Image}
+\label{binary} 
+\end{figure}   
+
+\subsubsection{Assembly Files}
+Each sample in the dataset is also accompanied by an `.asm` file, which contains the assembly code obtained from disassembling the binary. These files are larger and contain detailed operational codes (opcodes), symbols, and metadata which provide a deeper understanding of the malware's functionality. This detailed textual data allows for the extraction of sophisticated features like opcode sequences and API call patterns.
+
+ \begin{figure}[H]
+\includegraphics[width=9cm]{Fig/asmVisualized.png}
+\caption{Malware ASM assembly file as an image}
+\label{asm} 
+\end{figure}  
+
+\subsection{Dataset Distribution}
+
+A malware dataset that we have used in this study is a 30\% section making sure the classes are distributed just like the actual dataset , it has been split into training, testing, and cross-validation sets is used in this study. The dataset's classification of the distribution of data instances among several malware classifications is shown below  \textbf{Figure \ref{fig:comparison}}.
+
+\begin{itemize}
+    \item Training data: 4120 instances
+    \item Testing data: 1288 instances
+    \item Cross-validation data: 1031 instances
+    \item All data combined : 6439 instances
+
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=8cm]{Fig/comparison.png}
+\caption{Comparing the three types of data}
+\label{fig:comparison}
+\end{figure}
+
+\subsection{Dataset preprocessing}
+We decided to begin the preprocessing by eliminating the rows that contained null values and attempting to balance them. To that end, we created a program that would take the compressed dataset, begin to remove null values, then take 100 instances of each class and place them all in a folder. It was unexpected that, after the code executed, we would have exactly 842 instances, but we were surprised to find that this was the case. As class 5 (the simda), as shown in the table \textbf{Table \ref{tab:processed_dataset_description}}, only has 42 instances overall, which means the number we obtained after preprocessing is accurate: 42 examples belong to class 5 and 800 to the 8 remaining. 
+
+\begin{table}[ht]
+\centering
+\caption{Dataset Description}
+\label{tab:processed_dataset_description}
+\begin{tabular}{|c|l|c|r|} 
+\hline 
+Class ID & Family Name               & Type    & Class samples                        \\ \hline
+1        & Ramnit                    & Worm      & 100\\ \hline
+2        & Lollipop                  & Adware     & 100\\ \hline
+3        & Kelihos\_ver3             & Backdoor    & 100\\ \hline
+4        & Vundo                     & Trojan    & 100\\ \hline
+5        & Simda                     & Backdoor    & 42                   \\ \hline
+6        & Tracur                    & TrojanDownloader & 100\\ \hline
+7        & Kelihos\_ver1             & Backdoor   & 100\\ \hline
+8        & Obfuscator.ACY            & obfuscated malware& 100\\ \hline
+9        & Gatak                     & Backdoor     & 100\\ \hline
+ & & total&842\\\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/processed distrubution.png}
+\caption{processed data distribution}
+\label{cross-validation3} 
+\end{figure} 
+
+ \mar{\subsection{\textbf{\large Used Algorithms}}}
+The datasets described were processed using four different machine learning algorithms: k-Nearest Neighbors (k-NN), Logistic Regression,Random Forest, XGBoost, Naive Bayes and SVM For each algorithm, key performance metrics were calculated including Accuracy, Recall, Precision, and F1 Score. The resulting data were then visualized through various charts for comparative analysis. Each algorithm was carefully selected based on its ability to handle classification tasks efficiently, particularly in the context of malware detection.
+\newline
+
+\begin{enumerate}
+    \item \textbf{K – Nearest Neighbor:}
+In our study, we implement the k-Nearest Neighbors (k-NN) algorithm, a cornerstone machine learning technique known for its simplicity and effectiveness in classification tasks. The k-NN algorithm classifies data points based on the closest training examples in the feature space. For our purposes, we utilize the Euclidean distance to measure the proximity between data points, calculated as shown in Equation~\ref{eq:euclidean}. This method is particularly advantageous in malware classification due to its ability to flexibly adapt to new data, making it highly effective for detecting a variety of malware types. By analyzing the k closest samples from the training set, k-NN can accurately classify new instances of data, providing a reliable method for identifying potential malware based on patterns derived from historical data.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/KNN.png}
+\caption{KNN visualization}
+\label{KNN-visualization} 
+\end{figure} 
+
+\begin{equation}
+\label{eq:euclidean}
+\sqrt{\left(x_1-x_0\right)^2+\left(y_1-y_0\right)^2}
+\end{equation}
+
+
+\item \textbf{Logistic Regression:}
+is a statistical technique used to model a binary outcome's likelihood. It is used to forecast whether a data piece will be categorized as benign or malicious in our setting. An S-shaped curve that maps any real-valued number between 0 and 1 is known as the logistic function. used in this approach to predict probabilities. In our work, the interpretability and efficiency of logistic regression are very helpful for binary classification problems. Through a linear combination of the input features, which are subsequently transformed using the logistic function, it determines the likelihood of malware existence. The resilience of this method against overfitting when properly regularized and its ability to present a clear decision boundary are what make it effective in our malware detection framework.
+\newline
+ 
+\item \textbf{Random Forest:}
+\newline
+The Random Forest algorithm is a powerful ensemble learning method that may be applied to regression and classification challenges. During the training phase, it builds several decision trees and uses the average of the results for regression or the selection of the most frequent outcome for classification across all trees to create predictions. This technique helps reduce overfitting, a major problem in complicated models, by utilizing the power of numerous decision trees, each trained on distinct subsets of the training data by bootstrap sampling. To increase the diversity across the trees, Random Forest additionally adds additional randomization during the building process by choosing a subset of attributes to choose the optimum splits. Random Forest is incredibly effective because of its capacity to give excellent accuracy and generalization capability through the combination of bootstrap sampling and feature randomness. 
+
+ \begin{figure}[H]
+\includegraphics[width=9cm]{Fig/Random-Forest2.png}
+\caption{Random forest illustration}
+\label{Random-Forest} 
+\end{figure} 
+
+
+\item \textbf{XGBoost}
+\newline
+With the help of successive additions of weak models usually decision trees to rectify prior errors, the robust gradient boosting framework XGBoost improves both model accuracy and computing efficiency. In order to handle missing data during training efficiently, it employs parallel processing to expedite the creation of trees. In addition, XGBoost offers insights into feature importance, facilitates extensive cross-validation to fine-tune parameters, and incorporates L1 and L2 regularization to prevent overfitting. These features make XGBoost a very successful and adaptable predictive modeling tool for a variety of applications.
+\newline
+
+\item \textbf{Naive Bayes}
+\newline
+Naive Bayes is a straightforward and effective probabilistic method for machine learning classification issues. Making use of Bayes' Theorem, it calculates the probability that a class will exist given a set of features, assuming that the features are unrelated to the class name. Even though this simplifying assumption is typically false in real-world data, it makes the technique easy to employ and allows for efficient processing.
+\newline
+
+\begin{equation}
+P(C|X) \propto P(C) \cdot \prod_{i=1}^n P(x_i|C)
+\end{equation}
+
+
+\mar{\subsection{\textbf{\large Performance Metrics }}}
+The percentage of real results true positives and true negatives among all instances investigated is known as accuracy. The ratio of accurately predicted positive observations to the total number of predicted positives is known as precision. Recall, which is a synonym for sensitivity, quantifies the percentage of true positives that are appropriately recognized. The percentage of real negatives that are accurately identified is referred to as specificity. These parameters are essential to comprehending a classifier's efficacy.\newline
+
+\begin{center}
+
+\begin{equation}
+\text{Accuracy} = \frac{\mathrm{TP} + \mathrm{TN}}{\mathrm{TP} + \mathrm{TN} + \mathrm{FP} + \mathrm{FN}}
+\end{equation}
+
+\begin{equation}
+\text{Precision} = \frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FP}}
+\end{equation}
+
+\begin{equation}
+\text{Recall} = \frac{\mathrm{TP}}{\mathrm{TP} + \mathrm{FN}}
+\end{equation}
+
+\begin{equation}
+\text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{equation}
+\end{center}
+
+\end{enumerate}
+
+\mar{\section{\textbf{\large Results and Analysis}}} 
+\label{Results and analysis}
+The outcomes of four machine learning models—K-Nearest Neighbors (KNN), Random Forest, XGBoost, and Logistic Regression—are shown in this section. In a dataset, these models were assessed according to their f1-score, precision, and recall for various classes. 
+\newline
+
+\subsection{Experimental Setup:}
+The parameter selection process for machine learning algorithms used in experiments is covered in this section.
+\newline
+
+\textbf{Parameter Tuning for k-NN:} The k-Nearest Neighbors (k-NN) model is particularly sensitive to the number of neighbors, denoted as \(k\). Our evaluations ranged from \(k = 1\) to \(k = 15\), with the optimal performance observed at \(k=1\), achieving the lowest log loss, depicted in  \textbf{Figure \ref{fig:knn_cross_validation}}. Thus, \(k=1\) was selected for our experiments on bytes data.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/cross validation error for each alpha KNN (bytes).png}
+\caption{cross validation error for each alpha KNN}
+\label{fig:knn_cross_validation}
+\end{figure} 
+
+\textbf{Logistic Regression Optimization for Bytes Files:} Our tuning process for the Logistic Regression model focused on the regularization strength, \(C\), exploring values from \(10^{-5}\) to \(10^3\). This broad range was methodically tested to determine the optimal setting that minimizes the cross-validation log loss. The best performance was achieved with \(C =\) [insert optimal C value from your results], striking a balance between overfitting and underfitting. This optimized setting was used across all bytes files, ensuring robustness in the face of diverse data characteristics. The detailed cross-validation results for each \(C\) value can be seen in \textbf{Figure \ref{fig:Logistic_Regression_cross_validation}}, illustrating the effectiveness of our parameter tuning.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/cross validation error for each alpha logistic regression (bytes).png}
+\caption{cross validation error for each alpha Logistic Regression}
+\label{fig:Logistic_Regression_cross_validation}
+\end{figure}
+
+\textbf{Optimization of Random Forest for Bytes Files:} Our evaluation focused on determining the optimal number of trees, \( n\_estimators \), for the Random Forest model, testing configurations from 10 to 3000 trees. This intensive parameter tuning aimed at minimizing the cross-validation log loss, identifying the best performance at \( n\_estimators = \) [insert best alpha value here]. The selected configuration significantly balanced computational efficiency and predictive accuracy, as detailed in \textbf{Figure \ref{fig:Randon_Forest_cross_validation}}, and was consistently applied across all subsequent testing on bytes files.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/cross validation error for each alpha random forest (bytes).png}
+\caption{cross validation error for each alpha Random Forest }
+\label{fig:Randon_Forest_cross_validation}
+\end{figure}
+
+\textbf{XGBoost Optimization for Bytes Files:} To enhance the performance of the XGBoost model on bytes data, we concentrated on optimizing the number of trees, \( n\_estimators \), testing values ranging from 10 to 2000. This parameter tuning was crucial in minimizing the cross-validation log loss, a pivotal metric for assessing model accuracy. The most effective configuration, achieving the lowest log loss, as detailed in \textbf{Figure \ref{fig:XGBoost_cross_validation}}. This setting not only improved prediction accuracy but also maintained computational efficiency, making it ideal for our bytes data analysis.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/cross validation error for each alpha XGboost (bytes).png}
+\caption{cross validation error for each alpha XGBoost}
+\label{fig:XGBoost_cross_validation}
+\end{figure}
+
+\textbf{Naive Bayes Optimization for Bytes Files: }The graph shows the effect of the alpha parameter on a Naive Bayes model's performance. Lower alpha values decrease cross-validation error, improving accuracy. Increasing alpha above 1000 leads to higher error, indicating diminished performance. The optimal alpha strikes a balance to avoid overfitting or underfitting, maintaining model accuracy and computational efficiency.
+\begin{figure}[H]
+
+\includegraphics[width=8cm]{Fig/crossvalidation_nb_bytes.png}
+\caption{cross validation error for each alpha Naive Bayes}
+\label{fig:Naive_Bayes_CrossValidation}
+\end{figure}
+
+\subsection{Experimental Results:}
+This section contains the experimental findings that we obtained by applying the suggested strat
+egies for locating and categorizing the BIG 2015 training dataset.
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/confusion matrix KNN ( bytes).png}
+\caption{Confusion matrix for the K-Nearest Neighbors (KNN) model on bytes data}
+\label{confusion_matrix_KNN}
+\end{figure}
+The confusion matrix for KNN shows high true positive rates for many classes, indicating robust detection capabilities. Also the matrix indeed shows high values along the diagonal for several classes (like class 4 and class 9), confirming high true positive rates which suggest that the KNN model performs well in classifying those classes. 
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/confusion matrix Logistic regression( bytes).png}
+\caption{Confusion matrix for the Logistic Regression model on bytes data}
+\label{confusion_matrix_Logistic}
+\end{figure}
+The performance of logistic regression is highlighted in this confusion matrix, which places emphasis on striking an equilibrium of positive results and false negatives. Furthermore, although some off-diagonal elements in the confusion matrix have non-zero values, suggesting some misclassifications, the diagonal elements (true positives) in the confusion matrix also display good values. While parts of the description is accurate, there still appears to be some misunderstanding between some classes (e.g., between class 1 and class 3). 
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/confusion matrix random forest ( bytes).png}
+\caption{Confusion matrix for the Random Forest model on bytes data}
+\label{confusion_matrix_random}
+\end{figure}
+Random Forest's confusion matrix Cited as effective across various classes with a low misclassification rate. The matrix demonstrates high true positive rates with very few off-diagonal values, confirming the effectiveness of the Random Forest model in accurately classifying different classes with minimal misclassification. 
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/confusion matrix XGboost ( asm) png.png}
+\caption{Confusion matrix for the XGBoost model on ASM data}
+\label{confusion_matrix_XGboost}
+\end{figure}
+For XGBoost, the confusion matrix , It states minimal confusion between classes, highlighting precision in class distinctions. it also shows very high values along the diagonal for all classes with almost no values off-diagonal, confirming the description of high accuracy and minimal confusion between classes.  
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/cinfusionmartix_nb_bytes.png}
+\caption{Confusion matrix for the Naive Bayes model on BYTES data}
+\label{confusion_matrix_NaiveBayes}
+\end{figure}
+
+\subsection{Experimental Analysis:}
+The accuracy, F1-score, precision, and recall for various classes and models are all included in this analysis. 
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/precision_comparison.png}
+\caption{Comparison of precision values across different classes.}
+\label{precision}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/recall_comparison.png}
+\caption{Comparison of recall values across different classes.}
+\label{recall}
+\end{figure}
+
+\textbf{Discussion of Results:} The comparative analysis of machine learning algorithms demonstrates varied performance across different classes. KNN shows consistent recall rates but varies in precision, notably lower in some classes. Random Forest and XGBoost exhibit excellent performance in both metrics across all classes, highlighting their robustness in handling diverse datasets. Logistic Regression, while generally effective, shows some variability, particularly in recall for Class 5.Naive Bayes varies significantly with good performance in certain classes but falls short in others like Class 5 and 6, reflecting challenges in complex scenarios.
+
+\newpage
+
+\begin{table}[ht]
+\centering
+\caption{F1-Score Comparison Across Algorithms and Classes}
+\begin{tabular}{@{}cccccc@{}l}
+\toprule
+Class & KNN & Random Forest & XGBoost & Logistic Regression & Naive Bias \\ \midrule
+1 & 0.87 & 0.95 & 0.97 & 1.00 & 0.67  &\\
+2 & 0.87 & 1.00 & 1.00 & 0.98 & 0.78  &\\
+3 & 0.95 & 0.98 & 0.98 & 0.95 & 0.95  &\\
+4 & 0.90 & 1.00 & 1.00 & 0.98 & 0.83  &\\
+5 & 0.89 & 0.89 & 0.89 & 0.78 & 0.38   &\\
+6 & 0.91 & 0.98 & 1.00 & 0.91 & 0.42   &\\
+7 & 0.95 & 1.00 & 0.98 & 0.95 & 0.86  &\\
+8 & 0.90 & 0.93 & 0.91 & 0.90 & 0.88  &\\
+9 & 0.94 & 1.00 & 1.00 & 0.97 & 0.81  &\\ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/f1score_comparison.png}
+\caption{Comparison of F1-Score values across different classes.}
+\label{F1-Score}
+\end{figure}
+
+\textbf{F1-Score Analysis:} The F1-scores of five machine learning methods across nine classes are summarized in the table. The F1-score assesses recall as well as precision. While KNN performs well, more advanced models such as Random Forest and XGBoost frequently outperform because of their ability to handle a wide range of datasets with resilience. Performance is vary in logistic regression, which may be related to its susceptibility to class imbalance. Naive Bayes typically performs worse, especially in more difficult classes, demonstrating its shortcomings in efficiently managing a variety of datasets. This study aids in the selection of an algorithm that both satisfies the dataset's unique properties and the general accuracy standards.
+
+\begin{table}[ht]
+\centering
+\caption{Accuracy Comparison Across Algorithms}
+\begin{tabular}{|l|c|} 
+\hline 
+Algorithm & Accuracy \\ \hline
+KNN & 0.91 \\
+\hline 
+Random Forest & 0.98 \\
+\hline
+XGBoost & 0.98 \\
+\hline
+Logistic Regression & 0.95 \\
+\hline 
+Naive Bias & 0.73 \\
+\hline 
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{Fig/accuracy_comparison.png}
+\caption{Comparison of accuracy rates across different algorithms.}
+\label{accuracy}
+\end{figure}
+
+
+\textbf{Accuracy Comparison:} The accompanying table and figure display the accuracy of five machine learning algorithms. Random Forest and XGBoost are leaders, each with an accuracy of 0.98, demonstrating their strong performance in complex scenarios. Logistic Regression follows closely with a robust accuracy of 0.95, beneficial for projects requiring detailed model interpretation. KNN, with an accuracy of 0.91, remains effective for simpler tasks. Notably, Naive Bayes shows a lower accuracy of 0.73, which indicates it may struggle with more complex data compared to the other algorithms. This analysis assists in selecting the most appropriate algorithm based on the specific needs for accuracy and model complexity.
+
+\mar{\section{\textbf{\large Conclusion}}} 
+\label{Conclusion}
+In a nutshell, this study utilized the Microsoft Malware Classification Challenge dataset to evaluate the performance of several machine learning methods in categorizing malware types: K-Nearest Neighbors (KNN), Random Forest, Logistic Regression, XGBoost, and Naive Bayes. The most effective algorithms were Random Forest and XGBoost, which exhibited high accuracy and robustness in complex classification scenarios. KNN showed adaptability to new data, while Logistic Regression provided valuable interpretability for understanding model decisions. Naive Bayes, although less accurate in some cases, contributed useful insights for simpler classification tasks. These findings underscore the importance of employing advanced machine learning methods to enhance cybersecurity and suggest that integrating these algorithms could significantly improve malware detection capabilities in real-world applications.
+
+\mar{\section{\textbf{\large Acknowledgment}}} 
+\label{Acknowledgement}
+First and foremost, we would like to thank the Misr International University computer science faculty and staff for their tireless efforts in making this university a success. Our profound thanks to Prof. Mohamed Shebl El Komy University President; Prof. Ayman Nabil, Dean of the Computer Science Faculty; Prof. Abdelnasser Zaied, Vice Dean of Student Affairs; and Professor of Computer Engineering for providing us with this esteemed university and for keeping it operating so smoothly. Finally, we would especially want to express our gratitude to teaching assistant Eng. Tarek Talaat and associate professor of information systems Dr. Diaa AbdelMoneim for their continuous support and direction on our work.
+
+
+\bibliographystyle{IEEEtranN}
+\bibliography{IEEEabrv,references}
+\end{document}
